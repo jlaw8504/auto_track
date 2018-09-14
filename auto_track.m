@@ -1,11 +1,11 @@
 %% Hardcoded Variables
 scale = 5; %1/x times max possible radius in frequency space
-step_num = 7; %steps
-pixel_size = 64.5; %nm
+step_num = 21; %steps
+pixel_size = 133; %nm
 step_size = 300; %nm
 ens_dist_delta = [];
 
-gfp_files = dir('*GFP.tif');
+gfp_files = dir('*GFP*.tif');
 for n = 1:length(gfp_files)
     [~,name,~] = fileparts(gfp_files(n).name);
     %Open Image

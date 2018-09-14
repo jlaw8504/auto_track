@@ -29,7 +29,6 @@ coords_nm = sub_data(:,1:2) * pixel_size;
 %calculate distances from the midpoint (which is set at origin)
 %pre-allocate msd matrix
 msd = zeros(length(coords_nm)-1,1);
-coords_nm = sub_data(:,2:3) * pixel_size;
 %calculate distances from the midpoint (which is set at origin)
 for dt = 1:(length(msd))
     disp_sq = (coords_nm(1+dt:end,1) - coords_nm(1:end-dt,1) + ...

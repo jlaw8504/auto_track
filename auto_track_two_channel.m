@@ -1,16 +1,15 @@
-function [rc_array, msd_mat, s] = auto_track_two_channel(filename, fiducial_filename)
+function [rc_array, msd_mat, s] = auto_track_two_channel(filename, fiducial_channel)
 %%AUTO_TRACK_TWO_CHANNEL Calculate mean squared displacement and radius of
 %%confinement for two foci with corresponding fidicucial foci in a seperate
 %%image channel.
 %
 %   inputs :
-%       filename : String containing the filename of the image to read
-%       into matlab for tracking.
+%       filename : String containing the filename of the image hyperstack
+%       file to analyze.
 %
-%       fiducial_filename : String containing the filename of the image
-%       file to read into matlab for foci tracking and setting as fidicual
-%       marks for foci contained in images stored within filename image
-%       file.
+%       fiducial_channel : Integer, either 1 or 2, specifying which channel
+%       should be used as the fiducial mark/marks. Usually spindle pole
+%       body channel. I
 %
 %   output :
 %       rc_array : Two-value vector of radii of confinement of each foci
@@ -24,25 +23,26 @@ function [rc_array, msd_mat, s] = auto_track_two_channel(filename, fiducial_file
 %       of a foci at a given timestep/(tau). The order of the rows is
 %       timestep*1, timestep*2, timestep*3, etc. Each column reprsents a
 %       foci. The column order is the same for rc_array and msd_mat.
+
 %% Hardcoded Variables
 scale = 5; %1/x times max possible radius in frequency space
 step_num = 23; %steps
 pixel_size = 133.33; %nm
 step_size = 300; %nm
-%% Create structural array to store all data and allow for looping
-s.main.filename = filename;
-s.fid.filename = fiducial_filename;
+%% Load in the hyperstack
+hyper = readTiffStack(filename);
+idx1 = 1:2:size(hyper,3);
+idx2 = 2:2:size(hyper,3);
+if fiducial_channel == 2
+    s.main.im = hyper(:,:,idx1);
+    s.fid.im = hyper(:,:,idx2);
+else
+    s.main.im = hyper(:,:,idx2);
+    s.fid.im = hyper(:,:,idx1);
+end
 %% Pull out fieldnames and start for loop
 fn = fieldnames(s);
 for n=1:numel(fn)
-    %Open Image
-    s.(fn{n}).im = readTiffStack(s.(fn{n}).filename);
-    %make directory with same name as image
-    [~,s.(fn{n}).name,~] = fileparts(...
-        s.(fn{n}).filename);
-    if strcmp(fn{n}, 'main')
-        mkdir(s.(fn{n}).name);
-    end
     %first pass at pulling out coordinate information
     %main channel
     [s.(fn{n}).coords1,s.(fn{n}).coords2] = low_part_dect(...

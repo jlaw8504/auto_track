@@ -8,8 +8,8 @@ for i=1:numel(fn)
 end
 %since midpoint fiducial means that each foci will have same
 %coordinates but opposite sign, only use one marker
-sd.f1.sub_data = s.main.data(:,:,1) - s.fid.mid_data;
-sd.f2.sub_data = s.main.data(:,:,2) - s.fid.mid_data;
+sd.f1.sub_data = s.main.data(:,:,1) - s.fid.data(:,:,1);
+sd.f2.sub_data = s.main.data(:,:,2) - s.fid.data(:,:,1);
 sdn = fieldnames(sd);
 for n = 1:numel(sdn)   
 %% Rc calculations

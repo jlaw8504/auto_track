@@ -10,8 +10,9 @@ plane = 1;
 %instantiate a kill variable
 kill = 0;
 %show the first plane
-f1 = figure;
-imshow(stack(:,:,plane),[]);
+f1 = figure('WindowState', 'maximized');
+f1a = axes('Parent', f1);
+imshow(stack(:,:,plane), [], 'Parent', f1a);
 title(strcat(num2str(plane),'/',num2str(planes)))
 xlabel('Press SPACE to confirm plane');
 %Start a while loop that parses arrow keys to navigate planes
@@ -33,12 +34,13 @@ while kill == 0
         case 32 %space
             kill = 1;
     end
-    imshow(stack(:,:,plane),[]); 
+    imshow(stack(:,:,plane),[], 'Parent', f1a); 
     title(strcat(num2str(plane),'/',num2str(planes)))
     xlabel('Press SPACE to confirm plane');
 end
+close(f1)
 %use imshow to show the selected plane
-f2 = figure;
+f2 = figure('WindowState', 'maximized');
 imshow(stack(:,:,plane),[]);
 set(gcf,'position',get(0,'screensize'))
 title('Please select foci using RIGHT MOUSE CLICK');

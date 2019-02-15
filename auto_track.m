@@ -5,21 +5,20 @@ pixel_size = 64.5; %nm
 step_size = 300; %nm
 ens_dist_delta = [];
 
-gfp_files = dir('*GFP.tif');
+gfp_files = dir('*GFP*.tif');
 for n = 1:length(gfp_files)
     [~,name,~] = fileparts(gfp_files(n).name);
     %Open Image
-    im_cell = bfopen(gfp_files(n).name);
-    %convert to 3D matrix
-    im = bf2mat(im_cell);
-    %mkdir
+    im = readTiffStack(gfp_files(n).name);
+    %make directory with same name as image
     mkdir(name);
+    %first pass at pulling out coordinate information
     [coords1,coords2] = low_part_dect(im,scale,step_num,pixel_size,step_size);
+    %correct for foci switching between the two foci
     [path1, path2] = while_cost(coords1, coords2);
+    %write out the in-focus planes to a tiff stack with LZW compression
     im_writer(path1,path2,im,name);
-    %convert paths and coords back to pixels
-    coords1 = [coords1(:,1:2)/pixel_size,coords1(:,3:4)];
-    coords2 = [coords2(:,1:2)/pixel_size,coords2(:,3:4)];
+    % paths bnack to pixels
     path1 = [path1(:,1:2)/pixel_size,path1(:,3:4)];
     path2 = [path2(:,1:2)/pixel_size,path2(:,3:4)];
     %% Loop through paths and gaussian fit particles

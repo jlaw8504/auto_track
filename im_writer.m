@@ -1,7 +1,9 @@
 function im_writer(path1,path2,im,name)
 %test if im is double
 if isa(im,'double') == 1
-    error('Your image is in improper formate to be written');
+    if max(im(:)) > 255
+        im = uint16(im);
+    end
 end
 for n = 1:length(path1(:,4))
     image= im(:,:,path1(n,4));

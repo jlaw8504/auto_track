@@ -1,6 +1,6 @@
 %% Hardcoded Variables
 scale = 5; %1/x times max possible radius in frequency space
-step_num = 21; %steps
+step_num = 25; %steps
 pixel_size = 133; %nm
 step_size = 300; %nm
 ens_dist_delta = [];

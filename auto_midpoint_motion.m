@@ -18,8 +18,8 @@ mean_sig_sq = (x_sig_sq + y_sig_sq)/2;
 %res_sq calculations
 mean_x_res_sq = mean((sub_data(:,1) -...
     repmat(mean(sub_data(:,1)),size(sub_data(:,1)))).^2);
-mean_y_res_sq = mean((sub_data(:,1) -...
-    repmat(mean(sub_data(:,1)),size(sub_data(:,1)))).^2);
+mean_y_res_sq = mean((sub_data(:,2) -...
+    repmat(mean(sub_data(:,2)),size(sub_data(:,2)))).^2);
 res_sq = mean_x_res_sq + mean_y_res_sq;
 %Rc
 rc_pix = (5/4)*(sqrt(2*mean_sig_sq + res_sq));
@@ -29,9 +29,9 @@ coords_nm = sub_data(:,1:2) * pixel_size;
 %calculate distances from the midpoint (which is set at origin)
 %pre-allocate msd matrix
 msd = zeros(length(coords_nm)-1,1);
-mid_dists = sqrt(coords_nm(:,1).^2 + coords_nm(:,2).^2);
-for dt = 1:(length(mid_dists)-1)
-    disp_sq = (mid_dists(1+dt:end) - mid_dists(1:end-dt)).^2;
+%calculate distances from the midpoint (which is set at origin)
+for dt = 1:(length(msd))
+    disp_sq = (coords_nm(1+dt:end,1) - coords_nm(1:end-dt,1) + ...
+        coords_nm(1+dt:end,2) - coords_nm(1:end-dt,2)).^2;
     msd(dt,1) = mean(disp_sq);
 end
-
